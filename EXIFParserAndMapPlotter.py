@@ -40,16 +40,21 @@ longitude_list = []
 Items = os.listdir(".")  #list all files in current directory & store them in Items
 Items.sort() #sort list
 for names in Items: #loop through each file in Items list
-    if names.endswith(".jpg"):
-        exif = getexif(names) #pull exif from current image
-        lat = exif['GPSLatitude'] #pull the latitude from the exif
-        lat_ref = exif['GPSLatitudeRef'].strip()
-        lon = exif['GPSLongitude']
-        lon_ref = exif['GPSLongitudeRef'].strip()
-        lat = convert(lat, lat_ref)
-        lon = convert(lon, lon_ref)
-        latitude_list.append(lat) #add the current file's latitude to a list
-        longitude_list.append(lon) #add the current file's longitude to a list
+    if (names.endswith(".jpg"):
+        exif = getexif(names)
+        if "GPSLatitude" in exif.keys():
+            #pull exif from current image
+            print(exif)
+            lat = exif['GPSLatitude'] #pull the latitude from the exif
+            lat_ref = exif['GPSLatitudeRef'].strip()
+            lon = exif['GPSLongitude']
+            lon_ref = exif['GPSLongitudeRef'].strip()
+            lat = convert(lat, lat_ref)
+            lon = convert(lon, lon_ref)
+            latitude_list.append(lat) #add the current file's latitude to a list
+            longitude_list.append(lon) #add the current file's longitude to a list
+        else:
+            print("No GPS data in EXIF")
         gmap1 = gmplot.GoogleMapPlotter(51.5351944444, -0.148519444444, 7, apikey=apikey) #setting the initial view point & zoom level for the final map
         gmap1.scatter(latitude_list, longitude_list, '#FF0000', size=10) #adding points to mark each set of coordinates from the list
         gmap1.plot(latitude_list, longitude_list,  'cornflowerblue', edge_width = 3.5) #adding lines to connect each set of coordinates from the list
